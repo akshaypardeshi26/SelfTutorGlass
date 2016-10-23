@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Self Tutor</string>
+    <string name="title_activity_main">Immersive Self Tutor</string>
+    <string name="self_tutor">Self Tutor</string>
+    <string name="alphabets">Alphabets</string>
+    <string name="words">Words</string>
+    <string name="images">Images</string>
+    <string name="glass_voice_trigger">read me a story</string>
+</resources>
