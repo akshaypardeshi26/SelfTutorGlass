@@ -1,0 +1,41 @@
+Glass setup
+
+1. Install android studio - https://developer.android.com/studio/install.html
+
+http://ubicomp.ucsd.edu/cse118-218/projects/
+
+https://www.toptal.com/google-glass/building-your-first-glass-app-a-tutorial-for-aspiring-google-glass-developers
+https://developers.google.com/glass/develop/gdk/quick-start
+
+
+C:\Users\srbhc\AndroidStudioProjects
+
+C:\Users\srbhc\Documents\Software\ASM_2_50>java -jar asm.jar
+
+1. 
+
+
+
+https://cloud.google.com/vision/
+https://cloud.google.com/translate/
+
+
+Translating language
+https://cloud.google.com/translate/v2/translating-text-with-rest
+https://cloud.google.com/translate/v2/quickstart
+
+Vision API
+https://cloud.google.com/vision/docs/quickstart
+
+
+API key:
+AIzaSyBSikgWMfwePdzobV76pCBrzBKRHYItw84
+
+Bucket: saurabh_bucket
+https://console.cloud.google.com/storage/browser
+
+C:\Users\srbhc\AppData\Roaming\nltk_data...
+
+export GOOGLE_APPLICATION_CREDENTIALS=C:\Users\srbhc\Documents\GoogleDrive\UCSD\Fall 2016\218\Project\My First Project-f2a9bf1e91f7.json
+
+https://github.com/GoogleCloudPlatform/cloud-vision/tree/master/python/text
