@@ -98,13 +98,34 @@ public class MainActivity extends Activity {
         // Handle item selection. Menu items typically start another
         // activity, start a service, or broadcast another intent.
         switch (item.getItemId()) {
-            case R.id.alphabets:
+            /*case R.id.alphabets:
+                Intent intent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+                startActivityForResult(intent, 1);
+                return false;*/
+            case R.id.practice:
+                break;
+            case R.id.quiz:
+                break;
+            case R.id.practice_alphabets:
                 Intent intent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
                 startActivityForResult(intent, 1);
                 return false;
+            case R.id.practice_words:
+                break;
+            case R.id.practice_images:
+                break;
+            case R.id.quiz_alphabets:
+                Intent intent1 = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+                startActivityForResult(intent1, 1);
+                return false;
+            case R.id.quiz_words:
+                break;
+            case R.id.quiz_images:
+                break;
             default:
-                return super.onOptionsItemSelected(item);
+                return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
 

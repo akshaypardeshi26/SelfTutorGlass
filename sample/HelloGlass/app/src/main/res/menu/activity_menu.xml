@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item
+    <!--<item
         android:id="@+id/alphabets"
         android:title="@string/alphabets">
     </item>
@@ -11,5 +11,41 @@
     <item
         android:id="@+id/images"
         android:title="@string/images">
+    </item>-->
+    <item
+        android:id="@+id/practice"
+        android:title="Practice">
+        <menu>
+            <item
+                android:id="@+id/practice_alphabets"
+                android:title="@string/practice_alphabets">
+            </item>
+            <item
+                android:id="@+id/practice_words"
+                android:title="@string/practice_words">
+            </item>
+            <item
+                android:id="@+id/practice_images"
+                android:title="@string/practice_images">
+            </item>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/quiz"
+        android:title="Quiz">
+        <menu>
+            <item
+                android:id="@+id/quiz_alphabets"
+                android:title="@string/quiz_alphabets">
+            </item>
+            <item
+                android:id="@+id/quiz_words"
+                android:title="@string/quiz_words">
+            </item>
+            <item
+                android:id="@+id/quiz_images"
+                android:title="@string/quiz_images">
+            </item>
+        </menu>
     </item>
 </menu>
