@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 
 
@@ -46,6 +47,10 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+
+        //requests voice menu on this activity
+        getWindow().requestFeature(WindowUtils.FEATURE_VOICE_COMMANDS);
+
         mView = buildView();
 
         mCardScroller = new CardScrollView(this);
@@ -94,6 +99,17 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    public boolean onCreatePanelMenu(int featureId, Menu menu) {
+        if (featureId == WindowUtils.FEATURE_VOICE_COMMANDS ||
+                featureId == Window.FEATURE_OPTIONS_PANEL) {
+            getMenuInflater().inflate(R.menu.activity_menu, menu);
+            return true;
+        }
+        // Pass through to super to setup touch menu.
+        return super.onCreatePanelMenu(featureId, menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection. Menu items typically start another
         // activity, start a service, or broadcast another intent.
@@ -123,9 +139,43 @@ public class MainActivity extends Activity {
             case R.id.quiz_images:
                 break;
             default:
-                return true;
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
+        return true;
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        if (featureId == WindowUtils.FEATURE_VOICE_COMMANDS ||
+                featureId == Window.FEATURE_OPTIONS_PANEL) {
+            switch (item.getItemId()) {
+                case R.id.practice:
+                    break;
+                case R.id.quiz:
+                    break;
+                case R.id.practice_alphabets:
+                    Intent intent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+                    startActivityForResult(intent, 1);
+                    return false;
+                case R.id.practice_words:
+                    break;
+                case R.id.practice_images:
+                    break;
+                case R.id.quiz_alphabets:
+                    Intent intent1 = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+                    startActivityForResult(intent1, 1);
+                    return false;
+                case R.id.quiz_words:
+                    break;
+                case R.id.quiz_images:
+                    break;
+                default:
+                    return true;
+            }
+            return true;
+        }
+        // Good practice to pass through to super if not handled
+        return super.onMenuItemSelected(featureId, item);
     }
 
 
