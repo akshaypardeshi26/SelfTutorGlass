@@ -39,3 +39,18 @@ C:\Users\srbhc\AppData\Roaming\nltk_data...
 export GOOGLE_APPLICATION_CREDENTIALS=C:\Users\srbhc\Documents\GoogleDrive\UCSD\Fall 2016\218\Project\My First Project-f2a9bf1e91f7.json
 
 https://github.com/GoogleCloudPlatform/cloud-vision/tree/master/python/text
+
+
+https://cloud.google.com/vision/reference/rest/v1/images/annotate
+
+11/1/2016:
+https://cloud.google.com/vision/docs/
+https://cloud.google.com/vision/reference/rest/v1/images/annotate
+
+11/14/2016:
+https://cloud.google.com/vision/docs/face-tutorial
+http://www.danvk.org/2015/01/07/finding-blocks-of-text-in-an-image-using-python-opencv-and-numpy.html
+https://mzucker.github.io/2016/08/15/page-dewarping.html
+
+
+
