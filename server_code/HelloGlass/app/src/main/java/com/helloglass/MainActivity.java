@@ -1,5 +1,10 @@
 package com.helloglass;
 
+//Gesture Files
+import com.google.android.glass.content.Intents;
+import com.google.android.glass.touchpad.Gesture;
+import com.google.android.glass.touchpad.GestureDetector;
+
 import com.google.android.glass.media.Sounds;
 import com.google.android.glass.view.WindowUtils;
 import com.google.android.glass.widget.CardBuilder;
@@ -16,23 +21,23 @@ import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import org.json.*;
 import org.json.simple.parser.*;
 import org.apache.http.*;
 import org.apache.http.message.*;
+import org.opencv.android.CameraBridgeViewBase;
+
 import java.util.*;
 
 
 
 
-
-////////////////////////////
-
-/////////////////////////////
 /**
  * An {@link Activity} showing a tuggable "Hello World!" card.
  * <p>
@@ -55,9 +60,21 @@ public class MainActivity extends Activity {
      */
     private View mView;
 
+    //Create surfaceView object
+    private CameraSurfaceView cameraSurfaceView;
+    private static int TAKE_PICTURE_REQUEST = 1;
+    private GestureDetector gestureDetector = null;
+
+
     @Override
     protected void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+
+        //Initiate Camera View
+        cameraSurfaceView = new CameraSurfaceView(this);
+
+        //Turn on Gestures
+        gestureDetector = createGestureDetector(this);
 
         //requests voice menu on this activity
         getWindow().requestFeature(WindowUtils.FEATURE_VOICE_COMMANDS);
@@ -149,7 +166,6 @@ public class MainActivity extends Activity {
             case R.id.practice_images:
                 break;
             case R.id.quiz_alphabets:
-
                 Intent intent1 = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
                 startActivityForResult(intent1, 1);
                 return false;
@@ -183,6 +199,7 @@ public class MainActivity extends Activity {
                     sendImageData_in.execute();
                     break;
                 case R.id.practice_images:
+                    this.setContentView(cameraSurfaceView);
                     break;
                 case R.id.quiz_alphabets:
                     Intent intent1 = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
@@ -208,12 +225,22 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         mCardScroller.activate();
+
+        // Do not hold the camera during onResume
+        if (cameraSurfaceView != null) {
+            cameraSurfaceView.releaseCamera();
+        }
     }
 
     @Override
     protected void onPause() {
         mCardScroller.deactivate();
         super.onPause();
+
+        // Do not hold the camera during onPause
+        if (cameraSurfaceView != null) {
+            cameraSurfaceView.releaseCamera();
+        }
     }
 
     /**
@@ -226,7 +253,83 @@ public class MainActivity extends Activity {
         return card.getView();
     }
 
-    //Send data to server
+    //Override onActivityResult
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Handle photos
 
+        System.out.println("Inside onActivityResult");
+        System.out.println(data.toString());
+        System.out.println(requestCode);
+        System.out.println(resultCode);
+        System.out.println(RESULT_OK);
+        System.out.println(Activity.RESULT_OK);
+
+        if (requestCode == TAKE_PICTURE_REQUEST) {
+            String picturePath = data.getStringExtra(Intents.EXTRA_PICTURE_FILE_PATH);
+            System.out.println(picturePath);
+            System.out.println("Inside onActivityResult");
+            //Toast.makeText(getApplicationContext(), picturePath,
+            //	Toast.LENGTH_SHORT).show();
+
+            //processPictureWhenReady(picturePath);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    /*
+     * Send generic motion events to the gesture detector
+     */
+    @Override
+    public boolean onGenericMotionEvent(MotionEvent event) {
+        if (gestureDetector != null) {
+            return gestureDetector.onMotionEvent(event);
+        }
+
+        return false;
+    }
+
+
+    //Create Gesture Detector
+    private GestureDetector createGestureDetector(final Context context) {
+        GestureDetector gestureDetector = new GestureDetector(context);
+
+        //Create a Base Listener
+        gestureDetector.setBaseListener(new GestureDetector.BaseListener() {
+            @Override
+            public boolean onGesture(Gesture gesture)
+            {
+                // Make sure view is initiated
+                if (cameraSurfaceView != null) {
+                    System.out.println("Inside Camera View");
+                    // Tap with a single finger for photo
+                    if (gesture == Gesture.TAP) {
+                        System.out.println("Inside Gesture - TAP");
+                        //Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        Intent intent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+                        if (intent != null) {
+                            System.out.println("Inside Intent");
+                            Toast.makeText(getApplicationContext(), "Taking Picture",
+                                    Toast.LENGTH_SHORT).show();
+
+                            //Set resultCode
+                            if (getParent() == null) {
+                                setResult(Activity.RESULT_OK, intent);
+                            }
+                            else {
+                                getParent().setResult(Activity.RESULT_OK, intent);
+                            }
+
+                            startActivityForResult(intent, TAKE_PICTURE_REQUEST);
+                            System.out.println("After startActivityForResult");
+                        }
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+        return gestureDetector;
+    }
 }
 
