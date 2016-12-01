@@ -86,6 +86,9 @@ public class JSONParser {
                     putConnection.setEntity(se);
                     try {
                         response = httpClient.execute(putConnection);
+                        System.out.println("**********************");
+                        System.out.println(EntityUtils.toString(response.getEntity()));
+                        System.out.println("**********************");
                         String JSONString = EntityUtils.toString(response.getEntity(),
                                 "UTF-8");
                     } catch (ClientProtocolException e) {

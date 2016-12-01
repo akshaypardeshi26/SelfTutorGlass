@@ -120,6 +120,7 @@ public class MainActivity extends Activity {
         return super.onCreatePanelMenu(featureId, menu);
     }
 
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection. Menu items typically start another
@@ -143,8 +144,6 @@ public class MainActivity extends Activity {
                 //sendImageData_in.execute();
               //  Mat m = Mat.zeros(100,400, CvType.CV_8UC3);
                // Core.putText(m, "hello world", new Point(30,80), Core.FONT_HERSHEY_SCRIPT_SIMPLEX, 2.2, new Scalar(200,200,0),2);
-
-
 
                 break;
             case R.id.practice_images:

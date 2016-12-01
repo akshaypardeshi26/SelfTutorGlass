@@ -8,9 +8,9 @@
         <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.14.1" />
         <option name="modules">
           <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/openCVLibrary24131" />
+            <option value="$USER_HOME$/Documents/UCSD/Academics/fall2016/cse218/git/SelfTutorGlass/server_code/HelloGlass" />
+            <option value="$USER_HOME$/Documents/UCSD/Academics/fall2016/cse218/git/SelfTutorGlass/server_code/HelloGlass/app" />
+            <option value="$USER_HOME$/Documents/UCSD/Academics/fall2016/cse218/git/SelfTutorGlass/server_code/HelloGlass/openCVLibrary24131" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

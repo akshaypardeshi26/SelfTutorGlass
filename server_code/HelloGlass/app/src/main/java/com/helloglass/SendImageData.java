@@ -43,7 +43,9 @@ import java.util.*;
 
 public class SendImageData extends AsyncTask<String, String, String> {
 
-    public String url="http://192.168.43.110:5000/test";
+    public String url="http://192.168.43.41:5000/test";
+    //public String url="http://httpbin.org/post";
+
     JSONParser jsonParser = new JSONParser();
     JSONObject obj =new JSONObject();
     // JSON Node names
