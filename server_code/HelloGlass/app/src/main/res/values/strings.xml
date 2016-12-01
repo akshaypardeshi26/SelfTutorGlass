@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Self Tutor</string>
+    <string name="title_activity_main">Immersive Self Tutor</string>
+    <string name="self_tutor">Self Tutor</string>
+
+    <string name="practice_alphabets">Alphabets</string>
+    <string name="practice_words">Words</string>
+    <string name="practice_images">Images</string>
+
+    <string name="quiz_alphabets">Apple</string>
+    <string name="quiz_words">Ball</string>
+    <string name="quiz_images">Cat</string>
+
+    <string name="practice">Practice</string>
+    <string name="quiz">Quiz</string>
+
+    <string name="glass_voice_trigger">read me a story</string>
+</resources>
