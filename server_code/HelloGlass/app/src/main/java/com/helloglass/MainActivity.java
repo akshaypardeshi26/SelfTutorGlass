@@ -368,9 +368,11 @@ public class MainActivity extends Activity {
                 byte[] decodedImageString = Base64.decode(processedImageString, Base64.DEFAULT);
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedImageString, 0, decodedImageString.length);
 
+                /*
                 //Scale down Image
                 int newHeight = (int) (decodedByte.getHeight() * (512.0 / decodedByte.getWidth()));
                 decodedByte = Bitmap.createScaledBitmap(decodedByte, 512, newHeight, true);
+                */
 
                 CardBuilder card = new CardBuilder(this, CardBuilder.Layout.TEXT);
                 card.addImage(decodedByte);
