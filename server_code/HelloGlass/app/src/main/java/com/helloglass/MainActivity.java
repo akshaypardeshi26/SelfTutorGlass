@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.Toast;
 import org.json.*;
 import org.json.simple.parser.*;
@@ -373,12 +374,16 @@ public class MainActivity extends Activity {
                 int newHeight = (int) (decodedByte.getHeight() * (512.0 / decodedByte.getWidth()));
                 decodedByte = Bitmap.createScaledBitmap(decodedByte, 512, newHeight, true);
                 */
+                
+                ImageView imageView =  new ImageView(this);
+                imageView.setImageBitmap(decodedByte);
+                imageView.setScaleType(ImageView.ScaleType.CENTER);
 
-                CardBuilder card = new CardBuilder(this, CardBuilder.Layout.TEXT);
-                card.addImage(decodedByte);
 
-                View cardView = card.getView();
-                this.setContentView(cardView);
+                //View cardView = card.get();
+                //cardView.setScaleType(ImageView.ScaleType.CENTER);
+
+                this.setContentView(imageView);
                 responseImageShown = true;
 
                 System.out.print("\n");
