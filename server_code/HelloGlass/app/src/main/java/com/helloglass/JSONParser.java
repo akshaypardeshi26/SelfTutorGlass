@@ -70,7 +70,8 @@ public class JSONParser {
                 try {
 
                     String newName="name1";
-                    jsonObject.put("name", newName);
+                    System.out.println(params.get(0).getValue());
+                    jsonObject.put("name", params.get(0).getValue());
                 } catch(JSONException e) {}
                 try {
                     HttpResponse response;

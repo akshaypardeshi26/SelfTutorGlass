@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$USER_HOME$/Documents/UCSD/Academics/fall2016/cse218/git/SelfTutorGlass/server_code/HelloGlass/HelloGlass.iml" filepath="$USER_HOME$/Documents/UCSD/Academics/fall2016/cse218/git/SelfTutorGlass/server_code/HelloGlass/HelloGlass.iml" />
-      <module fileurl="file://$USER_HOME$/Documents/UCSD/Academics/fall2016/cse218/git/SelfTutorGlass/server_code/HelloGlass/app/app.iml" filepath="$USER_HOME$/Documents/UCSD/Academics/fall2016/cse218/git/SelfTutorGlass/server_code/HelloGlass/app/app.iml" />
-      <module fileurl="file://$USER_HOME$/Documents/UCSD/Academics/fall2016/cse218/git/SelfTutorGlass/server_code/HelloGlass/openCVLibrary24131/openCVLibrary24131.iml" filepath="$USER_HOME$/Documents/UCSD/Academics/fall2016/cse218/git/SelfTutorGlass/server_code/HelloGlass/openCVLibrary24131/openCVLibrary24131.iml" />
+      <module fileurl="file://$PROJECT_DIR$/HelloGlass.iml" filepath="$PROJECT_DIR$/HelloGlass.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/openCVLibrary24131/openCVLibrary24131.iml" filepath="$PROJECT_DIR$/openCVLibrary24131/openCVLibrary24131.iml" />
     </modules>
   </component>
 </project>

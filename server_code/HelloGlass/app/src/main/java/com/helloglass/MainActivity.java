@@ -13,11 +13,15 @@ import com.google.android.glass.widget.CardScrollView;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.content.Intent;
+import android.os.FileObserver;
 import android.provider.MediaStore;
+import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,6 +37,10 @@ import org.apache.http.*;
 import org.apache.http.message.*;
 import org.opencv.android.CameraBridgeViewBase;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 
@@ -195,8 +203,8 @@ public class MainActivity extends Activity {
                 case R.id.practice_words:
                     //doInBackground();
                     System.out.println("Inside practice word");
-                    SendImageData sendImageData_in= new SendImageData();
-                    sendImageData_in.execute();
+                    //SendImageData sendImageData_in= new SendImageData();
+                    //sendImageData_in.execute();
                     break;
                 case R.id.practice_images:
                     this.setContentView(cameraSurfaceView);
@@ -272,7 +280,7 @@ public class MainActivity extends Activity {
             //Toast.makeText(getApplicationContext(), picturePath,
             //	Toast.LENGTH_SHORT).show();
 
-            //processPictureWhenReady(picturePath);
+            processPictureWhenReady(picturePath);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -331,5 +339,59 @@ public class MainActivity extends Activity {
         });
         return gestureDetector;
     }
+
+    //Send the captured image to server
+    private void processPictureWhenReady(final String picturePath) {
+        System.out.println("Starting ProcessPictureWhenReady");
+        final File pictureFile = new File(picturePath);
+
+        if (pictureFile.exists())
+        {
+            // This is where we'll want to do our thing
+            SendImageData sendImageData_in= new SendImageData();
+            sendImageData_in.execute(picturePath);
+
+        }
+        else
+        {
+            // The file does not exist yet. Before starting the file observer, you
+            // can update your UI to let the user know that the application is
+            // waiting for the picture (for example, by displaying the thumbnail
+            // image and a progress indicator).
+
+
+
+
+            final File parentDirectory = pictureFile.getParentFile();
+
+            FileObserver observer = new FileObserver(parentDirectory.getPath(),
+                    FileObserver.CLOSE_WRITE | FileObserver.MOVED_TO) {
+                private boolean isFileWritten;
+
+                @Override
+                public void onEvent(int event, String path) {
+
+                    if (!isFileWritten) {
+
+                        File affectedFile = new File(parentDirectory, path);
+                        isFileWritten = affectedFile.equals(pictureFile);
+
+                        if (isFileWritten) {
+                            stopWatching();
+
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    processPictureWhenReady(picturePath);
+                                }
+                            });
+                        }
+                    }
+                }
+            };
+            observer.startWatching();
+        }
+    }
+
 }
 
