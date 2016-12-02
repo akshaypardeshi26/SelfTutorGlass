@@ -1,4 +1,3 @@
-
 import base64
 import os
 import sys
@@ -28,7 +27,7 @@ class VisionApi:
 	or
 	vision.detect_text_and_output_cropped_image('language_images/written_word_2_ball.jpg', 'ball')
     """
-    def __init__(self, api_discovery_file='vision_api.json'):
+    def __init__(self):
         self.credentials = GoogleCredentials.get_application_default()
         self.service = discovery.build(
             'vision', 
@@ -253,9 +252,7 @@ class VisionApi:
         box_array = np.asarray(box).reshape(4,2)
         minArgIndex = np.argmin(box_array, axis=0)
         maxArgIndex = np.argmax(box_array, axis=0)
-        print(box_array)
-        print('minArgIndex ', minArgIndex)
-        print('maxArgIndex ', maxArgIndex)
+
         ### This logic is not clean: it assumes the paper is rotated in a specific way - this can be taken care of though by having checks
         ## Or it might make more sense to rotate it, crop it, then find contours - atleast now we know the paper has no rotation !
         top_left     = box_array[minArgIndex[0]]
@@ -264,17 +261,21 @@ class VisionApi:
         top_right    = box_array[minArgIndex[1]]
         bottom_left  = box_array[maxArgIndex[1]]
 
-        print('top_left ' ,top_left)
-        print(bottom_right)
+        min_x = box_array[minArgIndex[0]][0]
+        min_y = box_array[minArgIndex[1]][1]
+        max_x = box_array[maxArgIndex[0]][0]
+        max_y = box_array[maxArgIndex[1]][1]
 
-        print(top_right)
-        print(bottom_left)
-
-        #    im.crop(box)
         margin = 10
-        cropped_im = im.crop((box_array[minArgIndex[0]][0] - margin, box_array[minArgIndex[1]][1] - 2*margin - font_size, 
-                              box_array[maxArgIndex[0]][0] + margin, box_array[maxArgIndex[1]][1] + margin))
-        cropped_im.save(output_filename)
+        cropped_im = im.crop((min_x - margin, min_y - 2*margin - font_size, 
+                              max_x + margin, max_y + margin))
+
+        # Get it into Aspect ratio - 4:3
+        crop_width, crop_height = cropped_im.size
+        crop_height = int((crop_width*3.0)/4.0)
+        
+        resized_im = cropped_im.resize((crop_width, crop_height), resample=Image.LANCZOS)
+        resized_im.save(output_filename)
 
     def detect_text_and_output_cropped_image(self, image_filename, expected_text, output_filename=None):
         responses = self.detect_text([image_filename])
