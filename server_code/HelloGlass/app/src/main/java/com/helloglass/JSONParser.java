@@ -70,9 +70,14 @@ public class JSONParser {
                 try {
 
                     String newName="name1";
-                    System.out.println(params.get(0).getValue());
-                    jsonObject.put("name", params.get(0).getValue());
+                    System.out.println("LENGTH #############################");
+                    System.out.println(params.get(0).getValue().length());
+                    System.out.println("LENGTH #############################");
+                    jsonObject.put("imageData", params.get(0).getValue());
                 } catch(JSONException e) {}
+
+                JSONObject resultJSON = null;
+
                 try {
                     HttpResponse response;
                     HttpParams httpParameters = new BasicHttpParams();
@@ -85,13 +90,14 @@ public class JSONParser {
                     se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE,
                             "application/json"));
                     putConnection.setEntity(se);
+
                     try {
+                        System.out.println("Timestamp - Send Post Request");
+                        System.out.println(System.currentTimeMillis());
                         response = httpClient.execute(putConnection);
-                        System.out.println("**********************");
-                        System.out.println(EntityUtils.toString(response.getEntity()));
-                        System.out.println("**********************");
-                        String JSONString = EntityUtils.toString(response.getEntity(),
-                                "UTF-8");
+                        System.out.println("Timestamp - Receive Post Response");
+                        System.out.println(System.currentTimeMillis());
+                        resultJSON = new JSONObject(EntityUtils.toString(response.getEntity()));
                     } catch (ClientProtocolException e) {
                         System.out.println("ClientProtocolException");
                         e.printStackTrace();
@@ -103,6 +109,8 @@ public class JSONParser {
                     System.out.println("Exception");
                     e.printStackTrace();
                 }
+
+                return resultJSON;
 
 
             }else if(method == "GET"){

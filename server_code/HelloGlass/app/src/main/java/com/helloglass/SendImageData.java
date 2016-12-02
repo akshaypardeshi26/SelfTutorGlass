@@ -50,7 +50,7 @@ import java.util.*;
 
 public class SendImageData extends AsyncTask<String, String, String> {
 
-    public String url="http://192.168.43.110:5000/test";
+    public String url="http://192.168.43.41:5000/test";
     //public String url="http://httpbin.org/post";
 
     JSONParser jsonParser = new JSONParser();
@@ -67,6 +67,7 @@ public class SendImageData extends AsyncTask<String, String, String> {
         Bitmap image_bitmap=null;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+        options.inPurgeable = true;
 
         try {
             image_bitmap = BitmapFactory.decodeStream(new FileInputStream(pictureFile), null, options);
@@ -74,7 +75,11 @@ public class SendImageData extends AsyncTask<String, String, String> {
             e.printStackTrace();
         }
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        image_bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream); //compress to which format you want.
+        image_bitmap.compress(Bitmap.CompressFormat.JPEG, 20, stream); //compress to which format you want.
+
+        image_bitmap.recycle();
+        image_bitmap = null;
+
         byte [] byte_arr = stream.toByteArray();
         String image_str = Base64.encodeToString(byte_arr, Base64.DEFAULT);
 
@@ -92,8 +97,16 @@ public class SendImageData extends AsyncTask<String, String, String> {
         System.out.println("inside dobackground1");
         // getting JSON Object
         // Note that create product url accepts POST method
-        JSONObject json = jsonParser.makeHttpRequest(url,
+        JSONObject postResultJSON = jsonParser.makeHttpRequest(url,
                 "POST", params);
+        String imageData = "";
+        try {
+            imageData = postResultJSON.getString("image_data");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("#### IMAGE DATA ####");
 
         System.out.println("inside dobackground2");
         // check for success tag
@@ -118,7 +131,7 @@ public class SendImageData extends AsyncTask<String, String, String> {
       //      e.printStackTrace();
        // }
 
-        return null;
+        return imageData;
     }
 
     protected void onPostExecute(String file_url) {

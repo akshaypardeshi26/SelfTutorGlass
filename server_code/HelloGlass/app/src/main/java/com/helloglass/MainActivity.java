@@ -1,6 +1,7 @@
 package com.helloglass;
 
 //Gesture Files
+import com.google.android.glass.app.Card;
 import com.google.android.glass.content.Intents;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
@@ -72,6 +73,8 @@ public class MainActivity extends Activity {
     private CameraSurfaceView cameraSurfaceView;
     private static int TAKE_PICTURE_REQUEST = 1;
     private GestureDetector gestureDetector = null;
+
+    private boolean responseImageShown = false;
 
 
     @Override
@@ -312,25 +315,32 @@ public class MainActivity extends Activity {
                     System.out.println("Inside Camera View");
                     // Tap with a single finger for photo
                     if (gesture == Gesture.TAP) {
-                        System.out.println("Inside Gesture - TAP");
-                        //Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        Intent intent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
-                        if (intent != null) {
-                            System.out.println("Inside Intent");
-                            Toast.makeText(getApplicationContext(), "Taking Picture",
-                                    Toast.LENGTH_SHORT).show();
+                        if (responseImageShown) {
+                            //Shift to Another card
+                            setContentView(mCardScroller);
+                            responseImageShown = false;
+                        } else {
+                            System.out.println("Inside Gesture - TAP");
+                            //Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            Intent intent = new Intent(MediaStore.INTENT_ACTION_STILL_IMAGE_CAMERA);
+                            if (intent != null) {
+                                System.out.println("Inside Intent");
+                                Toast.makeText(getApplicationContext(), "Taking Picture",
+                                        Toast.LENGTH_SHORT).show();
 
-                            //Set resultCode
-                            if (getParent() == null) {
-                                setResult(Activity.RESULT_OK, intent);
-                            }
-                            else {
-                                getParent().setResult(Activity.RESULT_OK, intent);
-                            }
+                                //Set resultCode
+                                if (getParent() == null) {
+                                    setResult(Activity.RESULT_OK, intent);
+                                }
+                                else {
+                                    getParent().setResult(Activity.RESULT_OK, intent);
+                                }
 
-                            startActivityForResult(intent, TAKE_PICTURE_REQUEST);
-                            System.out.println("After startActivityForResult");
+                                startActivityForResult(intent, TAKE_PICTURE_REQUEST);
+                                System.out.println("After startActivityForResult");
+                            }
                         }
+
                         return true;
                     }
                 }
@@ -349,7 +359,31 @@ public class MainActivity extends Activity {
         {
             // This is where we'll want to do our thing
             SendImageData sendImageData_in= new SendImageData();
-            sendImageData_in.execute(picturePath);
+            System.out.println("Timestamp - SendImageData - start");
+            System.out.println(System.currentTimeMillis());
+            try {
+                String processedImageString = sendImageData_in.execute(picturePath).get();
+                System.out.print("#### Processed Image String Length");
+                System.out.print(processedImageString.length());
+                byte[] decodedImageString = Base64.decode(processedImageString, Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedImageString, 0, decodedImageString.length);
+
+                //Scale down Image
+                int newHeight = (int) (decodedByte.getHeight() * (512.0 / decodedByte.getWidth()));
+                decodedByte = Bitmap.createScaledBitmap(decodedByte, 512, newHeight, true);
+
+                CardBuilder card = new CardBuilder(this, CardBuilder.Layout.TEXT);
+                card.addImage(decodedByte);
+
+                View cardView = card.getView();
+                this.setContentView(cardView);
+                responseImageShown = true;
+
+                System.out.print("\n");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
 
         }
         else

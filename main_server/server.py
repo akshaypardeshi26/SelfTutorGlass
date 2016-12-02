@@ -16,10 +16,17 @@ def index():
 @app.route("/test", methods=['POST'])
 def test():
 	request_json = request.get_json()
-	output_file = open('text.txt', 'wb')
-	output_file.write(request_json['name'])
+	image_data = request_json['imageData'].replace('\n', '')
+	output_file = open('captured_image.jpg', 'wb')
+	output_file.write(image_data.decode('base64'))
 	output_file.close()
-	return jsonify({})
+
+	result_json = {}
+	with open("uploaded_file.jpg", "rb") as f:
+		image_data = f.read()
+	result_json['image_data'] = image_data.encode('base64')
+	result_json['success'] = True
+	return jsonify(result_json)
 
 @app.route("/upload_image", methods=['GET', 'POST'])
 def upload_image():
