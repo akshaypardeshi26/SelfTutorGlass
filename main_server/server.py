@@ -3,26 +3,37 @@ from flask import request
 from flask import render_template
 from flask import jsonify
 
+from vision import VisionApi
+
 
 import json
 import sys
 
 app = Flask(__name__)
 
+IMAGE_FILE_NAME = 'captured_image.jpg'
+PROCESSED_IMAGE_FILE_NAME = 'captured_image_processed.jpg'
+
 @app.route("/", methods=['GET', 'POST'])
 def index():
 	return render_template('index.html')
 
-@app.route("/test", methods=['POST'])
+@app.route("/text_detection", methods=['POST'])
 def test():
 	request_json = request.get_json()
 	image_data = request_json['imageData'].replace('\n', '')
-	output_file = open('captured_image.jpg', 'wb')
+	output_file = open(IMAGE_FILE_NAME, 'wb')
 	output_file.write(image_data.decode('base64'))
 	output_file.close()
 
+	# initialize result JSON
 	result_json = {}
-	with open("uploaded_file.jpg", "rb") as f:
+
+	# create vision object
+	vision = VisionApi()
+	vision.detect_text_and_output_cropped_image(IMAGE_FILE_NAME, 'ball', PROCESSED_IMAGE_FILE_NAME)
+
+	with open(PROCESSED_IMAGE_FILE_NAME, "rb") as f:
 		image_data = f.read()
 	result_json['image_data'] = image_data.encode('base64')
 	result_json['success'] = True
