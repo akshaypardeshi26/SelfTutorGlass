@@ -48,9 +48,9 @@ import org.apache.http.message.*;
 import java.util.*;
 
 
-public class SendImageData extends AsyncTask<String, String, String> {
+public class SendImageData extends AsyncTask<String[], String, String> {
 
-    public String url="http://192.168.43.41:5000/text_detection";
+    public String url="http://192.168.43.110:5000/text_detection";
     //public String url="http://httpbin.org/post";
 
     JSONParser jsonParser = new JSONParser();
@@ -58,12 +58,14 @@ public class SendImageData extends AsyncTask<String, String, String> {
     // JSON Node names
     private static final String TAG_SUCCESS = "success";
 
-    public String doInBackground(String... picturePath) {
+    public String doInBackground(String[]... parameters) {
         ////////////////////////////////////////////
         //read image and convert it to string
-        final File pictureFile = new File(picturePath[0]);
+        final File pictureFile = new File(parameters[0][2]);
         System.out.println("Picturefile path is");
-        System.out.println(picturePath[0]);
+        System.out.println(parameters[0][0]);
+        System.out.println(parameters[0][1]);
+        System.out.println(parameters[0][2]);
         Bitmap image_bitmap=null;
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inPreferredConfig = Bitmap.Config.ARGB_8888;
@@ -91,7 +93,9 @@ public class SendImageData extends AsyncTask<String, String, String> {
 
         // Building Parameters
         List<NameValuePair> params = new ArrayList<NameValuePair>();
-        params.add(new BasicNameValuePair("name", image_str));
+        params.add(new BasicNameValuePair("imageData", image_str));
+        params.add(new BasicNameValuePair("textName", parameters[0][1]));
+        params.add(new BasicNameValuePair("MenuOption", parameters[0][0]));
         //params.add(new BasicNameValuePair("img",image_str));
         //params.add(new BasicNameValuePair("image", image));
         System.out.println("inside dobackground1");

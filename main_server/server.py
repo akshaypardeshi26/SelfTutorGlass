@@ -22,6 +22,10 @@ def index():
 def test():
 	request_json = request.get_json()
 	image_data = request_json['imageData'].replace('\n', '')
+	text_name = request_json['textName'].replace('\n', '')
+	menu_option = request_json['MenuOption'].replace('\n', '')
+	print(text_name)
+	print(menu_option)
 	output_file = open(IMAGE_FILE_NAME, 'wb')
 	output_file.write(image_data.decode('base64'))
 	output_file.close()
@@ -31,7 +35,10 @@ def test():
 
 	# create vision object
 	vision = VisionApi()
-	vision.detect_text_and_output_cropped_image(IMAGE_FILE_NAME, 'ball', PROCESSED_IMAGE_FILE_NAME)
+	if text_name == "Text":
+		vision.detect_text_and_output_cropped_image(IMAGE_FILE_NAME, text_name, PROCESSED_IMAGE_FILE_NAME)
+	else:
+		vision.detect_text_and_output_cropped_image(IMAGE_FILE_NAME, text_name, PROCESSED_IMAGE_FILE_NAME)
 
 	with open(PROCESSED_IMAGE_FILE_NAME, "rb") as f:
 		image_data = f.read()

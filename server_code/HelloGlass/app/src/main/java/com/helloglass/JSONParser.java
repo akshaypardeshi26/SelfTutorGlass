@@ -72,8 +72,11 @@ public class JSONParser {
                     String newName="name1";
                     System.out.println("LENGTH #############################");
                     System.out.println(params.get(0).getValue().length());
+                    System.out.println(params.get(1).getName());
                     System.out.println("LENGTH #############################");
                     jsonObject.put("imageData", params.get(0).getValue());
+                    jsonObject.put(params.get(1).getName(), params.get(1).getValue());
+                    jsonObject.put(params.get(2).getName(), params.get(2).getValue());
                 } catch(JSONException e) {}
 
                 JSONObject resultJSON = null;

@@ -503,14 +503,23 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
             SendImageData sendImageData_in= new SendImageData();
             System.out.println("Timestamp - SendImageData - start");
             System.out.println(System.currentTimeMillis());
+            String []params= new String[3];
             try {
+
                 if(image_labeling_flag){
+
                     image_labeling_flag=false;
+                    params[0] = "Image";
+                    params[1] = "";
+                    params[2] = picturePath;
                 }
                 else{
 
+                    params[0] = "Text";
+                    params[1] = curr_string;
+                    params[2] = picturePath;
                 }
-                String processedImageString = sendImageData_in.execute(picturePath).get();
+                String processedImageString = sendImageData_in.execute(params).get();
                 System.out.print("#### Processed Image String Length");
                 System.out.print(processedImageString.length());
                 byte[] decodedImageString = Base64.decode(processedImageString, Base64.DEFAULT);

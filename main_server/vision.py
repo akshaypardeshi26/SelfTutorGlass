@@ -199,7 +199,7 @@ class VisionApi:
             color = '#00ff00'
         else:
             font_size = 80
-            font = ImageFont.truetype("calibri.ttf", font_size)
+            font = ImageFont.truetype("Times New Roman.ttf", font_size)
             text_area = (box[0][0], box[0][1] - font_size - 10)
             draw.text(text_area, expected_text, (0,255,0), font=font)
             color = '#ff0000'
@@ -243,7 +243,7 @@ class VisionApi:
             font_size = 0
         else:
             font_size = 80
-            font = ImageFont.truetype("calibri.ttf", font_size)
+            font = ImageFont.truetype("Times New Roman.ttf", font_size)
             text_area = (box[0][0], box[0][1] - font_size - 10)
             draw.text(text_area, expected_text, (0,255,0), font=font)
             color = '#ff0000'
