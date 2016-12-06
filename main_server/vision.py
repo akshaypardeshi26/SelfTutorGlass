@@ -271,15 +271,27 @@ class VisionApi:
                               max_x + margin, max_y + margin))
 
         # Get it into Aspect ratio - 4:3
-        crop_width, crop_height = cropped_im.size
-        crop_height = int((crop_width*3.0)/4.0)
+#        crop_width, crop_height = cropped_im.size
+#        crop_height = int((crop_width*3.0)/4.0)
         
-        resized_im = cropped_im.resize((crop_width, crop_height), resample=Image.LANCZOS)
-        resized_im.save(output_filename)
+#        resized_im = cropped_im.resize((crop_width, crop_height), resample=Image.LANCZOS)
+#        resized_im.save(output_filename)
+        cropped_im.save(output_filename)
 
     def detect_text_and_output_cropped_image(self, image_filename, expected_text, output_filename=None):
         responses = self.detect_text([image_filename])
         if not output_filename:
-            output_filename = '.'.join(['_'.join([image_filename.split('.')[0], 'processed']), 'jpg'])
+            output_filename = '.'.join(['_'.join([os.path.splitext(i)[0], 'processed']), 'jpg'])
         self.crop_and_highlight_texts(image_filename, responses[image_filename], expected_text, output_filename)
-            
+
+    def detect_label_and_output_string(self, image_filename):
+        responses = self.detect_label([image_filename])
+        # Expecting only a single response
+        string_list = []
+        threshold = 0.80
+        for k, vs in responses.items():
+            for v in vs:
+                if v['score'] >= threshold:
+                    string_list.append(v['description'])
+            break
+        return string_list
