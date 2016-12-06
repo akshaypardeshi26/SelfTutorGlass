@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.content.Intent;
 import android.os.FileObserver;
 import android.provider.MediaStore;
+import android.speech.tts.TextToSpeech;
 import android.util.Base64;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -63,7 +64,7 @@ import java.util.*;
  *
  * @see <a href="https://developers.google.com/glass/develop/gdk/touch">GDK Developer Guide</a>
  */
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements TextToSpeech.OnInitListener{
 
     /**
      * {@link CardScrollView} to use as the main content view.
@@ -79,6 +80,9 @@ public class MainActivity extends Activity {
     int min_data_id;
     int max_data_id;
     boolean image_labeling_flag;
+    private TextToSpeech tts;
+    private boolean initialized = false;
+    private String queuedText;
 
     //Create surfaceView object
     private CameraSurfaceView cameraSurfaceView;
@@ -94,6 +98,12 @@ public class MainActivity extends Activity {
 
         //requests voice menu on this activity
         getWindow().requestFeature(WindowUtils.FEATURE_VOICE_COMMANDS);
+        tts = new TextToSpeech(this /* context */, this /* listener */);
+        //Initiate Camera View
+        cameraSurfaceView = new CameraSurfaceView(this);
+
+        //Turn on Gestures
+        gestureDetector = createGestureDetector(this);
 
         mView = buildView();
 
@@ -133,11 +143,7 @@ public class MainActivity extends Activity {
             }
         });
         setContentView(mCardScroller);
-        //Initiate Camera View
-        cameraSurfaceView = new CameraSurfaceView(this);
 
-        //Turn on Gestures
-        gestureDetector = createGestureDetector(this);
 
     }
 
@@ -402,6 +408,15 @@ public class MainActivity extends Activity {
             @Override
             public boolean onGesture(Gesture gesture)
             {
+
+                //double tap for speech
+                if(gesture==Gesture.SWIPE_UP) {
+                    System.out.println("Speak current String");
+                    if(!image_labeling_flag) {
+                        System.out.println(curr_string);
+                        speak(curr_string);
+                    }
+                }
                 // Make sure view is initiated
                 if (cameraSurfaceView != null) {
                     System.out.println("Inside Camera View");
@@ -442,6 +457,41 @@ public class MainActivity extends Activity {
         return gestureDetector;
     }
 
+
+    /*
+ Text to Speech Conversion onInit function
+
+ */
+    @Override
+    public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS) {
+            initialized = true;
+            tts.setLanguage(Locale.ENGLISH);
+
+            if (queuedText != null) {
+                speak(queuedText);
+            }
+        }
+    }
+
+    public void speak(String text) {
+        // If not yet initialized, queue up the text.
+        System.out.println("Speak called");
+        if (!initialized) {
+            queuedText = text;
+            return;
+        }
+        System.out.println("Speak 2 called");
+        queuedText = null;
+        // Before speaking the current text, stop any ongoing speech.
+        tts.stop();
+        // Speak the text.
+        System.out.println("tts called");
+        tts.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+    }
+
+
+
     //Send the captured image to server
     private void processPictureWhenReady(final String picturePath) {
         System.out.println("Starting ProcessPictureWhenReady");
@@ -454,6 +504,12 @@ public class MainActivity extends Activity {
             System.out.println("Timestamp - SendImageData - start");
             System.out.println(System.currentTimeMillis());
             try {
+                if(image_labeling_flag){
+                    image_labeling_flag=false;
+                }
+                else{
+
+                }
                 String processedImageString = sendImageData_in.execute(picturePath).get();
                 System.out.print("#### Processed Image String Length");
                 System.out.print(processedImageString.length());
