@@ -295,3 +295,42 @@ class VisionApi:
                     string_list.append(v['description'])
             break
         return string_list
+
+    def highlight_labels(self, image_filename, string_list, output_filename=None):
+        """Draws a polygon around the faces, then saves to output_filename.
+        Args:
+          image: a file containing the image with the faces.
+          faces: a list of faces found in the file. This should be in the format
+              returned by the Vision API.
+          output_filename: the name of the image file to be created, where the
+              faces have polygons drawn around them.
+        """
+        print(string_list)
+        if string_list == [] or string_list == None:
+            return
+        im = Image.open(image_filename)
+        draw = ImageDraw.Draw(im)
+
+        font_size = 80
+        font = ImageFont.truetype("calibri.ttf", font_size)
+        for q, s in enumerate(string_list):
+            text_area = (10, 10 + q*font_size)
+            draw.text(text_area, s, (0,255,0), font=font)
+            if q == 3:
+                break
+        im.save(output_filename)
+        
+    def detect_label_and_output_image(self, image_filename, output_filename=None):
+        responses = self.detect_label([image_filename])
+        # Expecting only a single response
+        string_list = []
+        threshold = 0.80
+        for k, vs in responses.items():
+            for v in vs:
+                if v['score'] >= threshold:
+                    string_list.append(v['description'])
+            break
+        if not output_filename:
+            output_filename = '.'.join(['_'.join([os.path.splitext(image_filename)[0], 'label']), 'jpg'])           
+        self.highlight_labels(image_filename, string_list, output_filename)
+        return output_filename        
