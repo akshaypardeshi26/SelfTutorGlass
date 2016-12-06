@@ -319,7 +319,7 @@ class VisionApi:
             if q == 3:
                 break
         im.save(output_filename)
-        
+
     def detect_label_and_output_image(self, image_filename, output_filename=None):
         responses = self.detect_label([image_filename])
         # Expecting only a single response
@@ -330,6 +330,8 @@ class VisionApi:
                 if v['score'] >= threshold:
                     string_list.append(v['description'])
             break
+        if string_list == []:
+            string_list.append('No labels found !')            
         if not output_filename:
             output_filename = '.'.join(['_'.join([os.path.splitext(image_filename)[0], 'label']), 'jpg'])           
         self.highlight_labels(image_filename, string_list, output_filename)
